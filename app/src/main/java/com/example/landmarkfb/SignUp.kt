@@ -7,11 +7,8 @@ import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -36,7 +33,7 @@ class SignUp : AppCompatActivity() {
 //        val users: CollectionReference = db.collection("users")
 //        val user: MutableMap<String, Any> = HashMap()
 
-        btnSignUp.setOnClickListener(View.OnClickListener {
+        btnSignUp.setOnClickListener {
             if (checkDataEntered()) {
                 val userEmail = email.getText().toString()
                 val userPassword = password.getText().toString()
@@ -46,18 +43,18 @@ class SignUp : AppCompatActivity() {
                 progressSignUp.setVisibility(View.GONE)
                 btnSignUp.setVisibility(View.VISIBLE)
             }
-        })
-        txtLogin.setOnClickListener(View.OnClickListener {
+        }
+        txtLogin.setOnClickListener {
             val intent = Intent(applicationContext, Login::class.java)
             startActivity(intent)
             finish()
-        })
+        }
     }
 
     public override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth!!.currentUser
+        val currentUser = auth.currentUser
         if (currentUser != null) {
             reload()
         }
@@ -70,7 +67,7 @@ class SignUp : AppCompatActivity() {
 //        user: MutableMap<*, *>
     ) {
         // [START create_user_with_email]
-        auth!!.createUserWithEmailAndPassword(email, password)
+        auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
