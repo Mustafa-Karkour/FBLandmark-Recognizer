@@ -18,18 +18,20 @@
 
     <TextView
         android:id="@+id/tvResult"
-        android:layout_width="352dp"
-        android:layout_height="231dp"
+        android:layout_width="347dp"
+        android:layout_height="219dp"
         android:layout_marginTop="20dp"
-        android:text="TextView"
+        android:gravity="center_horizontal"
+        android:text="Select a picture from the gallery"
         android:textSize="23sp"
+        android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/img" />
 
     <Button
-        android:id="@+id/btn_gallery"
+        android:id="@+id/btnGallery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="68dp"
@@ -46,7 +48,21 @@
         android:layout_marginTop="28dp"
         android:layout_marginEnd="68dp"
         android:onClick="clickToPredict"
-        android:text="Predict"
+        android:text="Locate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvResult" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button"
+        android:layout_width="56dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="4dp"
+        android:padding="0sp"
+        android:text="SignOut"
+        android:textSize="8sp"
+        app:elevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvResult"
+        android:onClick="signOut"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
