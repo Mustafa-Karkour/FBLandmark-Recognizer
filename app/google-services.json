@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "526520558829",
+    "project_id": "landmarkfb-da86d",
+    "storage_bucket": "landmarkfb-da86d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:526520558829:android:45c6182ad82f74e6cfd8e4",
+        "android_client_info": {
+          "package_name": "com.example.landmarkfb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "526520558829-ll80sh3de0t6ha9guef73k24nq4g0nh2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3_BkHUzqmTJDsjeivsJyVQNg42dSyGFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "526520558829-ll80sh3de0t6ha9guef73k24nq4g0nh2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
