@@ -9,10 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LandmarkFB">
-        <activity android:name=".SignUp"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
-        </activity>
-        <activity android:name=".Login"
+        <activity android:name=".LandmarkID"></activity>
+        <activity
+            android:name=".SignUp"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"></activity>
+        <activity
+            android:name=".Login"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -6,63 +6,50 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/img"
-        android:layout_width="275dp"
-        android:layout_height="229dp"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="44dp"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnLandmarkID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="188dp"
+        android:text="About your location"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:onClick="toLandmarkID"/>
 
-    <TextView
-        android:id="@+id/tvResult"
-        android:layout_width="347dp"
-        android:layout_height="219dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:text="Select a picture from the gallery"
-        android:textSize="23sp"
-        android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img" />
-
-    <Button
-        android:id="@+id/btnGallery"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnJournal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="28dp"
-        android:onClick="openGallery"
-        android:text="Gallery"
+        android:layout_marginTop="52dp"
+        android:text="Journal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvResult" />
+        app:layout_constraintTop_toBottomOf="@+id/btnLandmarkID"
+        android:onClick="toJournal"/>
 
-    <Button
-        android:id="@+id/btnPredict"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnNearby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="68dp"
-        android:onClick="clickToPredict"
-        android:text="Locate"
+        android:layout_marginTop="52dp"
+        android:text="Places near you"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvResult" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnJournal"
+        android:onClick="toNearby"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button"
         android:layout_width="56dp"
         android:layout_height="32dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginTop="128dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="signOut"
         android:padding="0sp"
         android:text="SignOut"
         android:textSize="8sp"
         app:elevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvResult"
-        android:onClick="signOut"/>
+        app:layout_constraintTop_toBottomOf="@+id/btnNearby" />
 </androidx.constraintlayout.widget.ConstraintLayout>
