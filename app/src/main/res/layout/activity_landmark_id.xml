@@ -11,12 +11,12 @@
         android:layout_width="292dp"
         android:layout_height="202dp"
         android:layout_marginTop="16dp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars"
-        android:visibility="invisible"/>
+        tools:srcCompat="@tools:sample/avatars" />
 
     <ProgressBar
         android:id="@+id/progressLocate"
@@ -92,25 +92,25 @@
         android:id="@+id/btnShowInJournal"
         android:layout_width="105dp"
         android:layout_height="55dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
         android:onClick="showInJournal"
-        android:text="Journal"
-        android:visibility="gone"
+        android:text="Add to\nJournal"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.226"
+        app:layout_constraintHorizontal_bias="0.192"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvResult" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnShowOnMap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Show on\nmap"
+        android:layout_width="105dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="24dp"
         android:onClick="showOnMap"
-        android:visibility="gone"
+        android:text="Show on\nmap"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.777"
+        app:layout_constraintHorizontal_bias="0.803"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvResult" />
 
