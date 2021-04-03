@@ -17,7 +17,6 @@ class MainActivity : AppCompatActivity() {
     fun toLandmarkID(view: View) {
         val intent = Intent(applicationContext, LandmarkID::class.java)
         startActivity(intent)
-        finish()
     }
 
     fun toJournal(view: View) {
