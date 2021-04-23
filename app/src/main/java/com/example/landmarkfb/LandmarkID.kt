@@ -1,5 +1,6 @@
 package com.example.landmarkfb
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -48,20 +49,22 @@ class LandmarkID : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-// Hellooooo
-        imgLocate.setImageURI(data?.data)
-        // Change constraints of Gallery button
-        val params = btnGallery.layoutParams as ConstraintLayout.LayoutParams
-        params.topToBottom = imgLocate.id
-        btnGallery.requestLayout()
 
-        txtSelect.visibility = View.GONE
-        imgLocate.visibility = View.VISIBLE
-        btnLocate.visibility = View.VISIBLE
+        if(requestCode ==100 && resultCode == Activity.RESULT_OK && data != null) {
+            imgLocate.setImageURI(data?.data)
+            // Change constraints of Gallery button
+            val params = btnGallery.layoutParams as ConstraintLayout.LayoutParams
+            params.topToBottom = imgLocate.id
+            btnGallery.requestLayout()
 
-        imgUri= data?.data
-        // convert the image to bitmap using its uri
-        bitmapImg = MediaStore.Images.Media.getBitmap(this.contentResolver, imgUri)
+            txtSelect.visibility = View.GONE
+            imgLocate.visibility = View.VISIBLE
+            btnLocate.visibility = View.VISIBLE
+
+            imgUri = data?.data
+            // convert the image to bitmap using its uri
+            bitmapImg = MediaStore.Images.Media.getBitmap(this.contentResolver, imgUri)
+        }
     }
 
     fun detectLandmark(v:View) {
@@ -197,11 +200,11 @@ class LandmarkID : AppCompatActivity() {
     }
 
     fun showInJournal(v:View) {
-//        intent = Intent(this, Journal::class.java)
-//        intent.putExtra("Image uri", imgUri)
+        intent = Intent(this, Journal::class.java)
+        intent.putExtra("Image uri", imgUri)
         // To get it back, use Uri imgUri = intent.getParcelableExtra("Image uri")
         // You can also send it as a string, then convert it back
-//        startActivity(intent)
+        startActivity(intent)
     }
 
     fun showOnMap(v:View) {

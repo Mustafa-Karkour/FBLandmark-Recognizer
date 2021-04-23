@@ -39,7 +39,7 @@ class AddNote : AppCompatActivity() {
 
         var imgUri = intent.getParcelableExtra<Uri>("Image uri")
         if(imgUri != null) {
-            
+
             imgURL = imgUri
             addNoteImg.setImageURI(imgURL)
         }
