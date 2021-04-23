@@ -12,7 +12,7 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_log_in.*
+import kotlinx.android.synthetic.main.activity_email_log_in.*
 
 class Login : AppCompatActivity() {
     //    var email: EditText? = null
@@ -24,7 +24,7 @@ class Login : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_log_in)
+        setContentView(R.layout.activity_email_log_in)
 
         // Initialize Firebase Auth
         auth = Firebase.auth
@@ -72,6 +72,7 @@ class Login : AppCompatActivity() {
         return true
     }
 
+
     public override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
@@ -87,6 +88,8 @@ class Login : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
+
 
     private fun signIn(email: String, password: String) {
         // [START sign_in_with_email]

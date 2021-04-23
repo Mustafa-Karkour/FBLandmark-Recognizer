@@ -14,17 +14,15 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_log_in.*
-import kotlinx.android.synthetic.main.activity_log_in.email
-import kotlinx.android.synthetic.main.activity_log_in.password
-import kotlinx.android.synthetic.main.activity_sign_up.*
-import java.util.*
+import kotlinx.android.synthetic.main.activity_email_log_in.email
+import kotlinx.android.synthetic.main.activity_email_log_in.password
+import kotlinx.android.synthetic.main.activity_email_sign_up.*
 
 class SignUp : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_up)
+        setContentView(R.layout.activity_email_sign_up)
 
         // Initialize Firebase Auth
         auth = Firebase.auth

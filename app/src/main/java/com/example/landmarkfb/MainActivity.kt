@@ -21,8 +21,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun toJournal(view: View) {
-        //val intent = Intent(applicationContext, Journal::class.java)
-        //startActivity(intent)
+        val intent = Intent(applicationContext, Journal::class.java)
+        startActivity(intent)
         //finish()
     }
 
@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     fun signOut(v: View) {
         FirebaseAuth.getInstance().signOut()
+        //val intent = Intent(applicationContext, Email_Login::class.java)
         val intent = Intent(applicationContext, Login::class.java)
         startActivity(intent)
         finish()

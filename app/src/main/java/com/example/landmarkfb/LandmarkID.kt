@@ -169,10 +169,6 @@ class LandmarkID : AppCompatActivity() {
         bitmapImg = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
     }
 
-    fun displayMsg(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
-    }
-
 //    fun signOut(v: View) {
 //        FirebaseAuth.getInstance().signOut()
 //        val intent = Intent(applicationContext, Login::class.java)

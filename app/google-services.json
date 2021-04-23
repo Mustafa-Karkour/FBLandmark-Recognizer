@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "526520558829-2e70kt7qp8hutaos0qf6dji2b682af7l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.landmarkfb",
+            "certificate_hash": "11e4e798755ce306babaee713cc1564a3a57a2c2"
+          }
+        },
+        {
           "client_id": "526520558829-ll80sh3de0t6ha9guef73k24nq4g0nh2.apps.googleusercontent.com",
           "client_type": 3
         }
