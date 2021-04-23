@@ -2,35 +2,73 @@ package com.example.landmarkfb
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Typeface
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.method.ScrollingMovementMethod
 import android.util.Base64
-import android.view.Gravity
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.gson.*
 import kotlinx.android.synthetic.main.activity_landmark_id.*
-import kotlinx.android.synthetic.main.activity_main.*
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
+import kotlin.properties.Delegates
 
 class LandmarkID : AppCompatActivity() {
     lateinit var bitmapImg: Bitmap
     lateinit var functions: FirebaseFunctions
+    lateinit var queue: RequestQueue
+    var imgUri: Uri? = null
+    var latitude: Double? = null
+    var longitude: Double? = null
+    val TAG = "SummarySearch"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landmark_id)
+        queue = Volley.newRequestQueue(this)
     }
 
-    fun clickToPredict(v: View) {
+    fun openGallery(v: View) {
+        var intent: Intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
 
-        //val image = FirebaseVisionImage.fromBitmap(bitmapImg)
-        //val detector = FirebaseVision.getInstance().visionCloudLandmarkDetector
+        startActivityForResult(intent, 100)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+// Hellooooo
+        imgLocate.setImageURI(data?.data)
+        // Change constraints of Gallery button
+        val params = btnGallery.layoutParams as ConstraintLayout.LayoutParams
+        params.topToBottom = imgLocate.id
+        btnGallery.requestLayout()
+
+        txtSelect.visibility = View.GONE
+        imgLocate.visibility = View.VISIBLE
+        btnLocate.visibility = View.VISIBLE
+
+        imgUri= data?.data
+        // convert the image to bitmap using its uri
+        bitmapImg = MediaStore.Images.Media.getBitmap(this.contentResolver, imgUri)
+    }
+
+    fun detectLandmark(v:View) {
+        progressLocate.visibility = View.VISIBLE
+
+        btnGallery.visibility = View.GONE
+        btnLocate.visibility = View.GONE
 
         // Initialize instance of Cloud Functions
         functions = FirebaseFunctions.getInstance()
@@ -60,59 +98,15 @@ class LandmarkID : AppCompatActivity() {
                 if (!task.isSuccessful) {
                     // Task failed with an exception
                     Toast.makeText(this, "Detection failed", Toast.LENGTH_SHORT)
+                    btnGallery.visibility = View.VISIBLE
+                    btnLocate.visibility = View.VISIBLE
+                    progressLocate.visibility = View.GONE
                 } else {
                     // Task completed successfully
-                    displayDetails(task)
+                    tvResult.movementMethod = ScrollingMovementMethod()
+                    parseResult(task)
                 }
             }
-
-//        detector.detectInImage(image)
-//            .addOnSuccessListener {
-//                // Task succeeded!
-//
-//                var sLandmarkName:String =""
-//                var sEntityId:String =""
-//                var sConfidence:String =""
-//
-//                var sLatitude:String =""
-//                var sLongitude:String =""
-//
-//                for (landmark in it) {
-//                    // Do something with landmark
-//                    val landmarkName = landmark.landmark
-//                    sLandmarkName = landmarkName.toString()
-//
-//                    val entityId = landmark.entityId
-//                    sEntityId = entityId.toString()
-//
-//                    val confidence = Math.round(landmark.confidence*100)
-//                    sConfidence = confidence.toString()
-//
-//                    val locations = landmark.locations
-//
-//                    var latitude:Double = 0.0
-//                    var longitude:Double= 0.0
-//
-//                    for(loc in locations){
-//                        latitude = loc.latitude
-//                        sLatitude = latitude.toString()
-//
-//                        longitude = loc.longitude
-//                        sLongitude=longitude.toString()
-//                    }
-//
-//
-//                }
-//
-//                tvResult.text = "LandmarkName: $sLandmarkName\nEntityID: $sEntityId"+
-//                        "\nConfidence: $sConfidence\nLatitude: $sLatitude\nLongitude: $sLongitude"
-//            }
-//            .addOnFailureListener {
-//                // Task failed with an exception
-//                displayMsg("Task failed with an exception")
-//
-//
-//            }
     }
 
     private fun annotateImage(requestJson: String): Task<JsonElement> {
@@ -128,51 +122,94 @@ class LandmarkID : AppCompatActivity() {
             }
     }
 
-    private fun displayDetails(task: Task<JsonElement>) {
-        tvResult.setTypeface(Typeface.DEFAULT)
-        tvResult.gravity = Gravity.START
-        var result = ""
+    private fun parseResult(task: Task<JsonElement>) {
         for (label in task.result!!.asJsonArray[0].asJsonObject["landmarkAnnotations"].asJsonArray) {
             val labelObj = label.asJsonObject
             val landmarkName = labelObj["description"]
-            //val entityId = labelObj["mid"]
-            //val score = labelObj["score"]
-            //val bounds = labelObj["boundingPoly"]
-            result = "Landmark Name: ${landmarkName.toString()}"
-
-            // Multiple locations are possible, e.g., the location of the depicted
-            // landmark and the location the picture was taken.
-            result += "\n\nLocation:"
-            for (loc in labelObj["locations"].asJsonArray) {
-                val latitude = loc.asJsonObject["latLng"].asJsonObject["latitude"]
-                val longitude = loc.asJsonObject["latLng"].asJsonObject["longitude"]
-                result += "\nLatitude: $latitude\nLongitude: $longitude"
-            }
-            tvResult.text = result
+            val latLng = labelObj["locations"].asJsonArray[0].asJsonObject["latLng"]
+            latitude = latLng.asJsonObject["latitude"].toString().toDoubleOrNull()
+            longitude = latLng.asJsonObject["longitude"].toString().toDoubleOrNull()
+            findPageID(landmarkName.toString())
         }
     }
 
-    fun openGallery(v: View) {
-        var intent: Intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/*"
+    private fun findPageID(landmarkName: String) {
+        // Initialize Request Queue
+        var url = "https://en.wikipedia.org/w/api.php?format=json&action=query&list=search"
+        val resultLimit = 1
+        url += "&srlimit=$resultLimit&srsearch=$landmarkName"
 
-        startActivityForResult(intent, 100)
+        // Request a string response from the provided URL.
+        val jsonObjectRequest = JsonObjectRequest(
+            Request.Method.GET, url, null,
+            { response ->
+                val jsonObject: JSONObject = response.getJSONObject("query")
+                val searchArray = jsonObject.getJSONArray("search")
+                for (i in 0 until searchArray.length()) {
+                    val landmarkTitle = searchArray.getJSONObject(i).getString("title")
+                    val pageID = searchArray.getJSONObject(i).getInt("pageid")
+                    displayExtract(pageID)
+                }
+            },
+            { error ->
+                // TODO: Handle error
+                Toast.makeText(this, "Could not find page", Toast.LENGTH_SHORT)
+            }
+        )
+        // Add a tag to the request
+        jsonObjectRequest.setTag(TAG)
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    private fun displayExtract(pageID:Int) {
+        var url = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1"
+        url += "&pageids=$pageID"
 
-        img.setImageURI(data?.data)
-        var uri: Uri? = data?.data
+        // Request a string response from the provided URL.
+        val jsonObjectRequest = JsonObjectRequest(
+            Request.Method.GET, url, null,
+            { response ->
+                var result = ""
+                val jsonObject: JSONObject = response.getJSONObject("query").getJSONObject("pages").getJSONObject(pageID.toString())
+                var title = jsonObject.getString("title")
+                val extract = jsonObject.getString("extract")
+                progressLocate.visibility = View.GONE
+                tvTitle.text = title
+                tvResult.text = extract
+                btnShowInJournal.visibility = View.VISIBLE
+                btnShowOnMap.visibility = View.VISIBLE
+            },
+            { error ->
+                // TODO: Handle error
+            }
+        )
 
-        // convert the image to bitmap using its uri
-        bitmapImg = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+        // Add a tag to the request
+        jsonObjectRequest.setTag(TAG)
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest)
     }
 
-//    fun signOut(v: View) {
-//        FirebaseAuth.getInstance().signOut()
-//        val intent = Intent(applicationContext, Login::class.java)
+    protected override fun onStop() {
+        super.onStop()
+        queue.cancelAll(TAG)
+    }
+
+    fun showInJournal(v:View) {
+//        intent = Intent(this, Journal::class.java)
+//        intent.putExtra("Image uri", imgUri)
+        // To get it back, use Uri imgUri = intent.getParcelableExtra("Image uri")
+        // You can also send it as a string, then convert it back
 //        startActivity(intent)
-//        finish()
-//    }
+    }
+
+    fun showOnMap(v:View) {
+//        intent = Intent(this, TouristMap::class.java)
+//        intent.apply {
+//            putExtra( "latitude", latitude)
+//            putExtra( "longitude", longitude)
+//        }
+//        startActivity(intent)
+    }
 }
