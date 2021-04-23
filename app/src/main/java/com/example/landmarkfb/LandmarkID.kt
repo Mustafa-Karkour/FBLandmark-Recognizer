@@ -48,7 +48,7 @@ class LandmarkID : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
+// Hellooooo
         imgLocate.setImageURI(data?.data)
         // Change constraints of Gallery button
         val params = btnGallery.layoutParams as ConstraintLayout.LayoutParams
