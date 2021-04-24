@@ -44,6 +44,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-functions:19.2.0'
     implementation 'com.google.code.gson:gson:2.8.6'
 
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:26.8.0')
+    implementation 'com.google.firebase:firebase-auth-ktx'
+
     // Volley
     implementation 'com.android.volley:volley:1.2.0'
 
@@ -58,9 +62,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    // Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:26.8.0')
-    implementation 'com.google.firebase:firebase-auth-ktx'
 
     //Country Code Picker
     implementation 'com.hbb20:ccp:2.4.7'
