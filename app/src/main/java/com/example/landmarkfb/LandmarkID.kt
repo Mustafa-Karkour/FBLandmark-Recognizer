@@ -200,8 +200,9 @@ class LandmarkID : AppCompatActivity() {
     }
 
     fun showInJournal(v:View) {
-        intent = Intent(this, Journal::class.java)
+        intent = Intent(this, AddNote::class.java)
         intent.putExtra("Image uri", imgUri)
+        intent.putExtra("landmark name",tvTitle.text)
         // To get it back, use Uri imgUri = intent.getParcelableExtra("Image uri")
         // You can also send it as a string, then convert it back
         startActivity(intent)

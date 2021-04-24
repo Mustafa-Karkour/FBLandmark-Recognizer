@@ -37,12 +37,18 @@ class AddNote : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        //Coming from LandmarkID class
         var imgUri = intent.getParcelableExtra<Uri>("Image uri")
+        var landmarkName:String = intent.getStringExtra("landmark name")
         if(imgUri != null) {
 
             imgURL = imgUri
             addNoteImg.setImageURI(imgURL)
         }
+        if(landmarkName != null){
+            etAddNoteTitle.setText(landmarkName)
+        }
+        //-------------------------------------
 
         pBLoadNote.visibility = View.INVISIBLE
         btnSaveNote.visibility = View.VISIBLE
