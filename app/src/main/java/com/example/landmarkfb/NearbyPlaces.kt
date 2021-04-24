@@ -29,6 +29,7 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
     OnMarkerClickListener,
     OnMapClickListener
 {
+    data class Place(val name:String = "", val latlng:LatLng = LatLng(0.0, 0.0))
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     var currentLocation: Location? = null
     private lateinit var mMap: GoogleMap
@@ -198,6 +199,6 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
 
 }
 
-data class Place(val name:String = "", val latlng:LatLng = LatLng(0.0, 0.0))
+
 
 
