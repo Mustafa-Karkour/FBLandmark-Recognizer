@@ -71,22 +71,25 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
         mMap.setOnMarkerClickListener(this)
         mMap.setOnMapClickListener(this)
 
+        //Coming from LandmarkID
         val lat:Double = intent.getDoubleExtra("latitude", 0.0)
         val long:Double = intent.getDoubleExtra("longitude", 0.0)
         val name = intent.getStringExtra("landmark name")
         var location:LatLng;
 
+        //Initialize camera on current location
         location = LatLng(currentLocation!!.latitude, currentLocation!!.longitude)
 
         mMap.moveCamera(CameraUpdateFactory.zoomTo(16f))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
 
+        //move to landmark (if coming from landmark ID)
         if (lat !=0.0 && long != 0.0 )
         {
             location = LatLng(lat,long)
-            val ab = ArrayList<Place>()
-            ab.add(Place(name, location))
-            addMarker(ab)
+            val place = ArrayList<Place>()
+            place.add(Place(name, location))
+            addMarker(place)
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 19f))
         }
 
