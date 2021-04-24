@@ -209,12 +209,11 @@ class LandmarkID : AppCompatActivity() {
     }
 
     fun showOnMap(v:View) {
-        tvResult.text = "Latitude: $latitude\nLongitude: $longitude"
-//        intent = Intent(this, TouristMap::class.java)
-//        intent.apply {
-//            putExtra( "latitude", latitude)
-//            putExtra( "longitude", longitude)
-//        }
-//        startActivity(intent)
+        intent = Intent(this, NearbyPlaces::class.java)
+        intent.putExtra("landmark name", tvTitle.text)
+        intent.putExtra( "latitude", latitude)
+        intent.putExtra( "longitude", longitude)
+
+        startActivity(intent)
     }
 }

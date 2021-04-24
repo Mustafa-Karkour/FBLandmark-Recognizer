@@ -12,10 +12,7 @@ import android.view.View
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener
-import com.google.android.gms.maps.GoogleMap.OnPoiClickListener
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener
+import com.google.android.gms.maps.GoogleMap.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -51,6 +48,8 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
         val options = GoogleMapOptions()
         options.zoomControlsEnabled(true)
 
+
+
         //Create map
         val mapFragment = SupportMapFragment.newInstance(options)
         supportFragmentManager
@@ -72,16 +71,32 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
         mMap.setOnMarkerClickListener(this)
         mMap.setOnMapClickListener(this)
 
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(12f))
-        val location = LatLng(currentLocation!!.latitude, currentLocation!!.longitude)
+        val lat:Double = intent.getDoubleExtra("latitude", 0.0)
+        val long:Double = intent.getDoubleExtra("longitude", 0.0)
+        val name = intent.getStringExtra("landmark name")
+        var location:LatLng;
+
+        location = LatLng(currentLocation!!.latitude, currentLocation!!.longitude)
+
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(16f))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
+
+        if (lat !=0.0 && long != 0.0 )
+        {
+            location = LatLng(lat,long)
+            val ab = ArrayList<Place>()
+            ab.add(Place(name, location))
+            addMarker(ab)
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 19f))
+        }
+
 
     }
 
     override fun onMyLocationButtonClick(): Boolean {
         getLocation()
         val latlng = LatLng(currentLocation!!.latitude, currentLocation!!.longitude)
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 17f))
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 16f))
         // Return false so that we don't consume the event and the default behavior still occurs
         // (the camera animates to the user's current position).
         return true
@@ -94,6 +109,7 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
         val marker = mMap.addMarker(MarkerOptions().position(poi.latLng).title(poi.name))
         marker.showInfoWindow()
         mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.position))
+
 
     }
 
@@ -117,7 +133,7 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
         }
     }
 
-    fun searchLocations(type:String) : ArrayList<Place>
+    fun searchLocations(type:String) : ArrayList<NearbyPlaces.Place>
     {
         getLocation()
         val result = ArrayList<Place>()
@@ -189,7 +205,7 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
         addMarker(result)
     }
 
-    fun addMarker(places: MutableList<Place>)
+    fun addMarker(places: ArrayList<Place>)
     {
         mMap.clear()
         for (place in places)

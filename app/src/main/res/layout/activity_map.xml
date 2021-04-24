@@ -9,7 +9,7 @@
     <FrameLayout
         android:id="@+id/mapContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginBottom="0dp"
         android:layout_weight="13">
 
@@ -17,48 +17,50 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:layout_marginBottom="4dp"
+        android:layout_weight="2"
+        android:gravity="bottom"
         android:orientation="horizontal">
 
-        <Button
+        <ImageView
             android:id="@+id/button3"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="64dp"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="3dp"
             android:layout_weight="1"
             android:onClick="onAttractionClick"
-            android:text="tour" />
+            app:srcCompat="@drawable/landmark" />
 
-        <Button
+        <ImageView
             android:id="@+id/button4"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="64dp"
             android:layout_marginStart="3dp"
             android:layout_marginEnd="3dp"
             android:layout_weight="1"
             android:onClick="onRestaurantClick"
-            android:text="food" />
+            app:srcCompat="@drawable/food" />
 
-        <Button
+        <ImageView
             android:id="@+id/button5"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="64dp"
             android:layout_marginStart="3dp"
             android:layout_marginEnd="3dp"
             android:layout_weight="1"
             android:onClick="onHospitalClick"
-            android:text="hsptl" />
+            app:srcCompat="@drawable/hospital" />
 
-        <Button
+        <ImageView
             android:id="@+id/button2"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="64dp"
             android:layout_marginStart="3dp"
             android:layout_marginEnd="6dp"
             android:layout_weight="1"
             android:onClick="onAtmClick"
-            android:text="atm" />
+            app:srcCompat="@drawable/atm" />
     </LinearLayout>
 </LinearLayout>
