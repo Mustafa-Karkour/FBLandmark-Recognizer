@@ -39,7 +39,7 @@ class AddNote : AppCompatActivity() {
 
         //Coming from LandmarkID class
         var imgUri = intent.getParcelableExtra<Uri>("Image uri")
-        var landmarkName:String = intent.getStringExtra("landmark name")
+        var landmarkName:String? = intent.getStringExtra("landmark name")
         if(imgUri != null) {
 
             imgURL = imgUri
