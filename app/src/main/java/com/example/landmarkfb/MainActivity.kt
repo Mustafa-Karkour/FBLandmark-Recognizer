@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     fun toNearby(view: View) {
         val intent = Intent(applicationContext, NearbyPlaces::class.java)
         startActivity(intent)
-        finish()
+        //finish()
     }
 
     fun signOut(v: View) {
