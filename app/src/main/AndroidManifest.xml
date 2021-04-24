@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
 
     <application
         android:allowBackup="true"
@@ -13,14 +16,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LandmarkFB">
         <activity
+            android:name=".NearbyPlaces" />
+        <activity
             android:name=".AddNote"
             android:label="@string/title_activity_add_note"
-            android:theme="@style/Theme.LandmarkFB.NoActionBar"></activity>
+            android:theme="@style/Theme.LandmarkFB.NoActionBar" />
         <activity
             android:name=".NoteDetails"
             android:label="@string/title_activity_note_details"
             android:theme="@style/Theme.LandmarkFB.NoActionBar" />
-        <activity android:name=".Journal" android:label="Journal" />
+        <activity
+            android:name=".Journal"
+            android:label="Journal" />
         <activity
             android:name=".SignUp"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
@@ -43,6 +50,10 @@
             <!-- </intent-filter> -->
         </activity>
         <activity android:name=".LandmarkID" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
     </application>
 
 </manifest>

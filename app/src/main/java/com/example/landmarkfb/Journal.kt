@@ -4,15 +4,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.landmarkfb.adapter.NoteAdapter
-import com.example.landmarkfb.model.NoteModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_journal.*
-import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.Map
 
 class Journal : AppCompatActivity() {
 
@@ -80,7 +78,7 @@ class Journal : AppCompatActivity() {
 
                     //var noteID = dataSnapshot.key
 
-                    var map = dataSnapshot.getValue() as Map<String,String>
+                    var map = dataSnapshot.getValue() as Map<String, String>
 
 
                     //a condition to avoid showing duplicate data in the RV

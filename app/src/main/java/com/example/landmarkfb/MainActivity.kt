@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
@@ -11,6 +12,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        LocationServices.getFusedLocationProviderClient(this)
 
     }
 
@@ -26,9 +29,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun toNearby(view: View) {
-        //val intent = Intent(applicationContext, Nearby::class.java)
-        //startActivity(intent)
-        //finish()
+        val intent = Intent(applicationContext, NearbyPlaces::class.java)
+        startActivity(intent)
+        finish()
     }
 
     fun signOut(v: View) {
