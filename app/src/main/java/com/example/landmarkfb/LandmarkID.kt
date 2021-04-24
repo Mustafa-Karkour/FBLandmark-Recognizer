@@ -90,7 +90,7 @@ class LandmarkID : AppCompatActivity() {
         request.add("image", image)
         //Add features to the request
         val feature = JsonObject()
-        feature.add("maxResults", JsonPrimitive(5))
+        feature.add("maxResults", JsonPrimitive(1))
         feature.add("type", JsonPrimitive("LANDMARK_DETECTION"))
         val features = JsonArray()
         features.add(feature)
@@ -209,6 +209,7 @@ class LandmarkID : AppCompatActivity() {
     }
 
     fun showOnMap(v:View) {
+        tvResult.text = "Latitude: $latitude\nLongitude: $longitude"
 //        intent = Intent(this, TouristMap::class.java)
 //        intent.apply {
 //            putExtra( "latitude", latitude)
