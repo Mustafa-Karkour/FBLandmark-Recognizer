@@ -13,7 +13,7 @@
         android:layout_height="150dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-
+        android:background="@color/white"
         android:onClick="addNoteImgClicked"
         android:src="@drawable/ic_placeholder_24dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,9 +25,11 @@
         android:layout_height="327dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
+        android:background="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/btnSaveNote"
-        app:layout_constraintTop_toBottomOf="@+id/addNoteImg"
-        tools:layout_editor_absoluteX="21dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addNoteImg">
 
         <EditText
             android:id="@+id/etAddNoteContent"
