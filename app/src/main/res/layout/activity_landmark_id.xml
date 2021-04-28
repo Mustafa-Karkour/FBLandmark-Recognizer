@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/paleblue"
     tools:context=".LandmarkID">
 
     <ImageView
@@ -46,6 +47,8 @@
         android:layout_height="250dp"
         android:layout_marginTop="54dp"
         android:textSize="20sp"
+        android:background="@drawable/rounded_corner"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.604"
         app:layout_constraintStart_toStartOf="parent"

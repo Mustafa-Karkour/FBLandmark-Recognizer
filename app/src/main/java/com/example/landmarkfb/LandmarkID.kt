@@ -180,6 +180,7 @@ class LandmarkID : AppCompatActivity() {
                 progressLocate.visibility = View.GONE
                 tvTitle.text = title
                 tvResult.text = extract
+                tvResult.visibility = View.VISIBLE
                 btnShowInJournal.visibility = View.VISIBLE
                 btnShowOnMap.visibility = View.VISIBLE
             },
