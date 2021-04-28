@@ -21,20 +21,20 @@
 
     <ScrollView
         android:id="@+id/scrollView2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="369dp"
+        android:layout_height="327dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/btnSaveNote"
         app:layout_constraintTop_toBottomOf="@+id/addNoteImg"
-        tools:layout_editor_absoluteX="191dp">
+        tools:layout_editor_absoluteX="21dp">
 
         <EditText
             android:id="@+id/etAddNoteContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10sp"
-            android:hint="Write Your Note Here"
+            android:hint="Write a note here!"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
