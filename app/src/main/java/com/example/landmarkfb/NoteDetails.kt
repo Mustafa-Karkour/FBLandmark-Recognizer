@@ -20,14 +20,14 @@ class NoteDetails : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
+        //from the noteAdapter
         var dataIntent = intent
 
         var currTitle = dataIntent.getStringExtra("title")
         var currContent = dataIntent.getStringExtra("content")
         var currDate = dataIntent.getStringExtra("date")
         var currColor:Int = dataIntent.getIntExtra("color",0)
-
+        //-----------------------
 
         var imgUrl:String = dataIntent.getStringExtra("url")
         var URL:Uri = Uri.parse(imgUrl)

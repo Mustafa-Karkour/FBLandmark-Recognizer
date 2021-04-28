@@ -3,6 +3,7 @@ package com.example.landmarkfb
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.landmarkfb.adapter.NoteAdapter
@@ -82,7 +83,7 @@ class Journal : AppCompatActivity() {
 
 
                     //a condition to avoid showing duplicate data in the RV
-                    if(!titles.contains(map["title"].toString())){
+                    if(!noteIDs.contains(map["noteID"].toString())){
 
                         titles.add(map["title"].toString())
                         contents.add(map["content"].toString())
@@ -92,7 +93,6 @@ class Journal : AppCompatActivity() {
                     }
 
                 }
-
                 noteAdapter.notifyDataSetChanged()
 
 
@@ -106,7 +106,6 @@ class Journal : AppCompatActivity() {
 
 
     }
-
 
 
 

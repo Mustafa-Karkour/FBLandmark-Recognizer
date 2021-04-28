@@ -18,6 +18,7 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_add_note.*
 import kotlinx.android.synthetic.main.content_add_note.*
 import java.text.DateFormat
+import java.time.LocalDate
 import java.util.*
 
 class AddNote : AppCompatActivity() {
@@ -111,7 +112,7 @@ class AddNote : AppCompatActivity() {
 
         var calender:Calendar = Calendar.getInstance()
 
-        var currDate:String = DateFormat.getDateInstance(DateFormat.FULL).format(calender.time)
+        var currDate:String = DateFormat.getDateInstance(DateFormat.MEDIUM).format(calender.time)
 
         return currDate
 
@@ -155,11 +156,11 @@ class AddNote : AppCompatActivity() {
 
                 myDBRef.child(userEmail).child(noteID).setValue(noteMode).addOnSuccessListener { taskSnapshot ->
                     //Toast.makeText(applicationContext,"Uploaded Successfully",Toast.LENGTH_LONG).show()
-                    //onBackPressed() //go to the previous page
+                    onBackPressed() //go to the previous page
 
-                    val toJournal = Intent(this,Journal::class.java)
-                    startActivity(toJournal)
-                    finish()
+//                    val toJournal = Intent(this,Journal::class.java)
+//                    startActivity(toJournal)
+//                    finish()
                 }.addOnFailureListener{error->
 
                     Toast.makeText(applicationContext,error.message,Toast.LENGTH_LONG).show()
