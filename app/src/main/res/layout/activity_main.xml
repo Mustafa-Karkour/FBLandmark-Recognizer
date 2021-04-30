@@ -11,11 +11,10 @@
         android:id="@+id/btnLandmarkID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="164dp"
+        android:layout_marginTop="160dp"
         android:onClick="toLandmarkID"
         android:text="Upload a picture"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,33 +22,34 @@
         android:id="@+id/btnJournal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="56dp"
+        android:onClick="toJournal"
         android:text="Journal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLandmarkID"
-        android:onClick="toJournal"/>
+        app:layout_constraintTop_toBottomOf="@+id/btnLandmarkID" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnNearby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="56dp"
+        android:onClick="toNearby"
         android:text="Places near you"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnJournal"
-        android:onClick="toNearby"/>
+        app:layout_constraintTop_toBottomOf="@+id/btnJournal" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSignOut"
-        android:layout_width="56dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="132dp"
+        android:layout_width="75dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="152dp"
         android:onClick="signOut"
         android:padding="0sp"
         android:text="Sign Out"
-        android:textSize="8sp"
+        android:textSize="12sp"
+        android:textAlignment="center"
         app:elevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.98"
