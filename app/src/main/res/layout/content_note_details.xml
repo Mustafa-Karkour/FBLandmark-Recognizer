@@ -20,13 +20,12 @@
 
     <TextView
         android:id="@+id/tvImgDate"
-        android:layout_width="0dp"
+        android:layout_width="146dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="29dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="56dp"
         android:layout_marginEnd="8dp"
-        android:text="ssssssss"
-        android:textAlignment="center"
+        android:text="Date"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/addNoteImg"
@@ -34,20 +33,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="369dp"
+        android:layout_height="327dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addNoteImg"
-        tools:layout_editor_absoluteX="191dp">
+        android:background="@drawable/rounded_corner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addNoteImg">
 
         <TextView
             android:id="@+id/etAddNoteContent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="10sp"
-            android:text="ssssssssssssssssssssssssss"
+            android:text="Note"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />

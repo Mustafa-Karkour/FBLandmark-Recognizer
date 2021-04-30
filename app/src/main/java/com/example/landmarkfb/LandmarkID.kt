@@ -57,12 +57,13 @@ class LandmarkID : AppCompatActivity() {
             params.topToBottom = imgLocate.id
             btnGallery.requestLayout()
 
+            // Remove on-screen text and replace with buttons
             txtSelect.visibility = View.GONE
             imgLocate.visibility = View.VISIBLE
             btnLocate.visibility = View.VISIBLE
 
+            // Save Uri of image and convert it to a bitmap
             imgUri = data?.data
-            // convert the image to bitmap using its uri
             bitmapImg = MediaStore.Images.Media.getBitmap(this.contentResolver, imgUri)
         }
     }
@@ -70,6 +71,7 @@ class LandmarkID : AppCompatActivity() {
     fun detectLandmark(v:View) {
         progressLocate.visibility = View.VISIBLE
 
+        // Remove buttons after clicking
         btnGallery.visibility = View.GONE
         btnLocate.visibility = View.GONE
 
