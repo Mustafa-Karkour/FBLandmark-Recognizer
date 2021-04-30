@@ -17,6 +17,9 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_add_note.*
 import kotlinx.android.synthetic.main.content_add_note.*
+import kotlinx.android.synthetic.main.content_add_note.addNoteImg
+import kotlinx.android.synthetic.main.content_add_note.etAddNoteContent
+import kotlinx.android.synthetic.main.content_note_details.*
 import java.text.DateFormat
 import java.time.LocalDate
 import java.util.*
@@ -50,6 +53,9 @@ class AddNote : AppCompatActivity() {
             etAddNoteTitle.setText(landmarkName)
         }
         //-------------------------------------
+
+        tvImgDate_ADD.text = getCurrDate()
+
 
         pBLoadNote.visibility = View.INVISIBLE
         btnSaveNote.visibility = View.VISIBLE
