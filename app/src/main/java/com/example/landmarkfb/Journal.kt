@@ -3,7 +3,6 @@ package com.example.landmarkfb
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.landmarkfb.adapter.NoteAdapter
