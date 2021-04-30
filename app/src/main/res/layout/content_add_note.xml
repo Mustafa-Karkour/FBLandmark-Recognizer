@@ -13,9 +13,9 @@
         android:layout_height="150dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:background="@color/white"
         android:onClick="addNoteImgClicked"
-        android:src="@drawable/ic_placeholder_24dp"
+        android:src="@drawable/img_placeholder"
+        android:background="@drawable/rounded_shape"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
