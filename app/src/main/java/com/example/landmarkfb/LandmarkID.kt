@@ -174,6 +174,7 @@ class LandmarkID : AppCompatActivity() {
             },
             { error ->
                 Toast.makeText(this, "Could not find page", Toast.LENGTH_SHORT).show()
+                Log.d(TAG, error.message)
             }
         )
         // Add a tag to the request
@@ -190,7 +191,6 @@ class LandmarkID : AppCompatActivity() {
         val jsonObjectRequest = JsonObjectRequest(
             Request.Method.GET, url, null,
             { response ->
-                var result = ""
                 val jsonObject: JSONObject =
                     response.getJSONObject("query").getJSONObject("pages").getJSONObject(
                         pageID.toString()
@@ -205,7 +205,7 @@ class LandmarkID : AppCompatActivity() {
                 btnShowOnMap.visibility = View.VISIBLE
             },
             { error ->
-                // TODO: Handle error
+                Log.d(TAG, error.message)
             }
         )
 
