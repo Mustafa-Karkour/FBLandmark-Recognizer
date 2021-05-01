@@ -168,14 +168,12 @@ class LandmarkID : AppCompatActivity() {
                 val jsonObject: JSONObject = response.getJSONObject("query")
                 val searchArray = jsonObject.getJSONArray("search")
                 for (i in 0 until searchArray.length()) {
-                    val landmarkTitle = searchArray.getJSONObject(i).getString("title")
                     val pageID = searchArray.getJSONObject(i).getInt("pageid")
                     displayExtract(pageID)
                 }
             },
             { error ->
-                // TODO: Handle error
-                Toast.makeText(this, "Could not find page", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "Could not find page", Toast.LENGTH_SHORT).show()
             }
         )
         // Add a tag to the request
