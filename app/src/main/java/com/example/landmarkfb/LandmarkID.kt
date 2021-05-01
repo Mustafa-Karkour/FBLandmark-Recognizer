@@ -150,8 +150,6 @@ class LandmarkID : AppCompatActivity() {
                 val latLng = labelObj["locations"].asJsonArray[0].asJsonObject["latLng"]
                 latitude = latLng.asJsonObject["latitude"].toString().toDoubleOrNull()
                 longitude = latLng.asJsonObject["longitude"].toString().toDoubleOrNull()
-                val score = labelObj["score"].toString()
-                Log.d(TAG, score)
                 findPageID(landmarkName.toString())
             }
         }
