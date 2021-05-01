@@ -103,11 +103,11 @@ class SignUp : AppCompatActivity() {
 
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
-            // Set Display Name to the entered first name
-            val setDisplayName = UserProfileChangeRequest.Builder().setDisplayName(
-                firstName!!.text.toString()
-            ).build()
-            user.updateProfile(setDisplayName)
+//            // Set Display Name to the entered first name
+//            val setDisplayName = UserProfileChangeRequest.Builder().setDisplayName(
+//                firstName!!.text.toString()
+//            ).build()
+//            user.updateProfile(setDisplayName)
 
             //Re-authentication to update Display Name
             auth.signInWithEmailAndPassword(email!!.text.toString(), password!!.text.toString())
@@ -144,17 +144,17 @@ class SignUp : AppCompatActivity() {
         // Check if form is filled correctly
         progressSignUp!!.visibility = View.VISIBLE
         btnSignUp!!.visibility = View.INVISIBLE
-        if (isEmpty(firstName)) {
-            Toast.makeText(this, "You must enter first name to register!", Toast.LENGTH_SHORT)
-                .show()
-            firstName!!.error = "First name is required!"
-            return false
-        }
-        if (isEmpty(lastName)) {
-            Toast.makeText(this, "Enter a last name to register", Toast.LENGTH_SHORT).show()
-            lastName!!.error = "Last name is required!"
-            return false
-        }
+//        if (isEmpty(firstName)) {
+//            Toast.makeText(this, "You must enter first name to register!", Toast.LENGTH_SHORT)
+//                .show()
+//            firstName!!.error = "First name is required!"
+//            return false
+//        }
+//        if (isEmpty(lastName)) {
+//            Toast.makeText(this, "Enter a last name to register", Toast.LENGTH_SHORT).show()
+//            lastName!!.error = "Last name is required!"
+//            return false
+//        }
         if (!isEmail(email)) {
             Toast.makeText(this, "Enter an e-mail address to register", Toast.LENGTH_SHORT).show()
             email!!.error = "Enter valid email!"
@@ -169,6 +169,17 @@ class SignUp : AppCompatActivity() {
             Toast.makeText(this, "Password must have at least 6 characters", Toast.LENGTH_SHORT)
                 .show()
             password!!.error = "Password must have at least 6 characters"
+            return false
+        }
+        if (isEmpty(confirmPassword)) {
+            Toast.makeText(this, "Type the password again to confirm", Toast.LENGTH_SHORT).show()
+            confirmPassword!!.error = "Confirm password"
+            return false
+        }
+        if (!password!!.text.toString().equals(confirmPassword!!.text.toString())) {
+            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT)
+                .show()
+            confirmPassword!!.error = "Passwords do not match"
             return false
         }
         return true
