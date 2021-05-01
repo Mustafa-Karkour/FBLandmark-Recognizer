@@ -4,14 +4,16 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.method.ScrollingMovementMethod
 import android.util.Base64
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.android.volley.Request
 import com.android.volley.RequestQueue
@@ -23,7 +25,7 @@ import com.google.gson.*
 import kotlinx.android.synthetic.main.activity_landmark_id.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
-import kotlin.properties.Delegates
+
 
 class LandmarkID : AppCompatActivity() {
     lateinit var bitmapImg: Bitmap
@@ -32,7 +34,7 @@ class LandmarkID : AppCompatActivity() {
     var imgUri: Uri? = null
     var latitude: Double? = null
     var longitude: Double? = null
-    val TAG = "SummarySearch"
+    val TAG = "LandmarkID"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +70,7 @@ class LandmarkID : AppCompatActivity() {
         }
     }
 
-    fun detectLandmark(v:View) {
+    fun detectLandmark(v: View) {
         progressLocate.visibility = View.VISIBLE
 
         // Remove buttons after clicking
@@ -101,12 +103,14 @@ class LandmarkID : AppCompatActivity() {
         annotateImage(request.toString())
             .addOnCompleteListener { task ->
                 if (!task.isSuccessful) {
+                    Log.d(TAG, "failed")
                     // Task failed with an exception
-                    Toast.makeText(this, "Detection failed", Toast.LENGTH_SHORT)
+                    Toast.makeText(this, "Detection failed", Toast.LENGTH_SHORT).show()
                     btnGallery.visibility = View.VISIBLE
                     btnLocate.visibility = View.VISIBLE
                     progressLocate.visibility = View.GONE
                 } else {
+                    Log.d(TAG, "success")
                     // Task completed successfully
                     tvResult.movementMethod = ScrollingMovementMethod()
                     parseResult(task)
@@ -128,13 +132,28 @@ class LandmarkID : AppCompatActivity() {
     }
 
     private fun parseResult(task: Task<JsonElement>) {
-        for (label in task.result!!.asJsonArray[0].asJsonObject["landmarkAnnotations"].asJsonArray) {
-            val labelObj = label.asJsonObject
-            val landmarkName = labelObj["description"]
-            val latLng = labelObj["locations"].asJsonArray[0].asJsonObject["latLng"]
-            latitude = latLng.asJsonObject["latitude"].toString().toDoubleOrNull()
-            longitude = latLng.asJsonObject["longitude"].toString().toDoubleOrNull()
-            findPageID(landmarkName.toString())
+        Log.d(TAG, task.result!!.toString())
+        val resultArray = task.result!!.asJsonArray[0].asJsonObject["landmarkAnnotations"].asJsonArray
+        if (resultArray.size() == 0) {
+            val toast = Toast.makeText(this, "Detection failed\nPlease try again or use a different image", Toast.LENGTH_SHORT)
+            val v = toast.view.findViewById<TextView>(android.R.id.message)
+            v.gravity = Gravity.CENTER
+            toast.show()
+
+            btnGallery.visibility = View.VISIBLE
+            btnLocate.visibility = View.VISIBLE
+            progressLocate.visibility = View.GONE
+        } else {
+            for (label in resultArray) {
+                val labelObj = label.asJsonObject
+                val landmarkName = labelObj["description"]
+                val latLng = labelObj["locations"].asJsonArray[0].asJsonObject["latLng"]
+                latitude = latLng.asJsonObject["latitude"].toString().toDoubleOrNull()
+                longitude = latLng.asJsonObject["longitude"].toString().toDoubleOrNull()
+                val score = labelObj["score"].toString()
+                Log.d(TAG, score)
+                findPageID(landmarkName.toString())
+            }
         }
     }
 
@@ -167,7 +186,7 @@ class LandmarkID : AppCompatActivity() {
         queue.add(jsonObjectRequest)
     }
 
-    private fun displayExtract(pageID:Int) {
+    private fun displayExtract(pageID: Int) {
         var url = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1"
         url += "&pageids=$pageID"
 
@@ -176,7 +195,10 @@ class LandmarkID : AppCompatActivity() {
             Request.Method.GET, url, null,
             { response ->
                 var result = ""
-                val jsonObject: JSONObject = response.getJSONObject("query").getJSONObject("pages").getJSONObject(pageID.toString())
+                val jsonObject: JSONObject =
+                    response.getJSONObject("query").getJSONObject("pages").getJSONObject(
+                        pageID.toString()
+                    )
                 var title = jsonObject.getString("title")
                 val extract = jsonObject.getString("extract")
                 progressLocate.visibility = View.GONE
@@ -202,20 +224,20 @@ class LandmarkID : AppCompatActivity() {
         queue.cancelAll(TAG)
     }
 
-    fun showInJournal(v:View) {
+    fun showInJournal(v: View) {
         intent = Intent(this, AddNote::class.java)
         intent.putExtra("Image uri", imgUri)
-        intent.putExtra("landmark name",tvTitle.text)
+        intent.putExtra("landmark name", tvTitle.text)
         // To get it back, use Uri imgUri = intent.getParcelableExtra("Image uri")
         // You can also send it as a string, then convert it back
         startActivity(intent)
     }
 
-    fun showOnMap(v:View) {
+    fun showOnMap(v: View) {
         intent = Intent(this, NearbyPlaces::class.java)
         intent.putExtra("landmark name", tvTitle.text)
-        intent.putExtra( "latitude", latitude)
-        intent.putExtra( "longitude", longitude)
+        intent.putExtra("latitude", latitude)
+        intent.putExtra("longitude", longitude)
 
         startActivity(intent)
     }
