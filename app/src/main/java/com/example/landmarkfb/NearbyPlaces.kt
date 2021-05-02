@@ -100,12 +100,6 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
             mMap.addMarker(MarkerOptions().title(landmarkName).position(location).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)))
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16f))
         }
-
-        else
-        {
-            cameFromLandmark = false
-        }
-
     }
 
     //Used for Google Places API request
