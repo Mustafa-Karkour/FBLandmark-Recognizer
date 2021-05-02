@@ -1,7 +1,9 @@
 package com.example.landmarkfb
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -15,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
@@ -168,6 +171,7 @@ class LandmarkID : AppCompatActivity() {
                 val jsonObject: JSONObject = response.getJSONObject("query")
                 val searchArray = jsonObject.getJSONArray("search")
                 for (i in 0 until searchArray.length()) {
+                    val landmarkTitle = searchArray.getJSONObject(i).getString("title")
                     val pageID = searchArray.getJSONObject(i).getInt("pageid")
                     displayExtract(pageID)
                 }
@@ -230,11 +234,16 @@ class LandmarkID : AppCompatActivity() {
     }
 
     fun showOnMap(v: View) {
-        intent = Intent(this, NearbyPlaces::class.java)
-        intent.putExtra("landmark name", tvTitle.text)
-        intent.putExtra("latitude", latitude)
-        intent.putExtra("longitude", longitude)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 2)
+        }
+        else {
+            intent = Intent(this, NearbyPlaces::class.java)
+            intent.putExtra("landmark name", tvTitle.text)
+            intent.putExtra("latitude", latitude)
+            intent.putExtra("longitude", longitude)
 
-        startActivity(intent)
+            startActivity(intent)
+        }
     }
 }
