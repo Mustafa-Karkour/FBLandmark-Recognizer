@@ -24,7 +24,7 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
     data class Place(val name:String = "", val latlng:LatLng = LatLng(0.0, 0.0))
 
     lateinit var fusedLocationClient: FusedLocationProviderClient
-    lateinit var currentLocation: LatLng
+    lateinit var currentLocation : LatLng
     lateinit var mMap: GoogleMap
     lateinit var landmarkLocation: LatLng
     var landmarkName:String? = null
@@ -193,6 +193,7 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
 
     }
 
+
     fun setClickable(clickable: Boolean)
     {
         //Store reference to all buttons
@@ -207,6 +208,7 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
         for (btn in buttons)
         {
             btn.isClickable = clickable
+
             if (clickable)
             {
                 btn.alpha = 1f
@@ -224,6 +226,7 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
         {
             m.remove()
         }
+
         markers.clear()
     }
 

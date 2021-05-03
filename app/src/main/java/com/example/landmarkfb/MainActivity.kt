@@ -16,8 +16,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        LocationServices.getFusedLocationProviderClient(this)
-
     }
 
     fun toLandmarkID(view: View) {
@@ -36,6 +34,7 @@ class MainActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 2)
         }
         else {
+            LocationServices.getFusedLocationProviderClient(this)
             val intent = Intent(applicationContext, NearbyPlaces::class.java)
             startActivity(intent)
         }
