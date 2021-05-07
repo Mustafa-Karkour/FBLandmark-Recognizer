@@ -24,7 +24,7 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
     data class Place(val name:String = "", val latlng:LatLng = LatLng(0.0, 0.0))
 
     lateinit var fusedLocationClient: FusedLocationProviderClient
-    lateinit var currentLocation : LatLng
+    var currentLocation : LatLng = LatLng(0.0,0.0)
     lateinit var mMap: GoogleMap
     lateinit var landmarkLocation: LatLng
     var landmarkName:String? = null
