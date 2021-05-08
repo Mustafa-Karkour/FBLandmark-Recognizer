@@ -32,7 +32,7 @@ class NoteDetails : AppCompatActivity() {
         var imgUrl:String = dataIntent.getStringExtra("url")
         var URL:Uri = Uri.parse(imgUrl)
         var img:ImageView = findViewById(R.id.addNoteImg)
-        Glide.with(this).load(URL).into(img)
+        Glide.with(this).load(URL).into(img) //to read the img URL from the Storage section
 
 
         tvNoteDetailsTitle.text = currTitle

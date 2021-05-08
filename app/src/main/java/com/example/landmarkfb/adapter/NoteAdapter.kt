@@ -26,6 +26,7 @@ class NoteAdapter(private val titles:ArrayList<String>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
 
+        //"objectifying" note_view_item  layout
         var itemView = LayoutInflater.from(parent.context).inflate(R.layout.note_view_item,parent,false)
 
         return NoteViewHolder(itemView)
@@ -90,7 +91,7 @@ class NoteAdapter(private val titles:ArrayList<String>,
 
 
 
-
+        //to ensure that each note's title or description looks neat
         //too long title or description
         if(currTitle.length>13) //14 or more characters is too long for a title
             currHolder.tvNoteTitle.text = currTitle.substring(0,14)+"..."
@@ -118,16 +119,16 @@ class NoteAdapter(private val titles:ArrayList<String>,
 
 
 
-
+        // a note is clicked from the recyclerview
         currHolder.cnView.setOnClickListener { view ->
 
-            val intent = Intent(view.context, NoteDetails::class.java)
-            intent.putExtra("title",currTitle)
-            intent.putExtra("content",currContent)
-            intent.putExtra("color",ranColor)
-            intent.putExtra("url",currImgURL)
-            intent.putExtra("date",currDate)
-            view.context.startActivity(intent)
+            val toNoteDetails = Intent(view.context, NoteDetails::class.java)
+            toNoteDetails.putExtra("title",currTitle)
+            toNoteDetails.putExtra("content",currContent)
+            toNoteDetails.putExtra("color",ranColor)
+            toNoteDetails.putExtra("url",currImgURL)
+            toNoteDetails.putExtra("date",currDate)
+            view.context.startActivity(toNoteDetails)
 
         }
 
@@ -136,7 +137,7 @@ class NoteAdapter(private val titles:ArrayList<String>,
 
 
 
-
+    //delete note from the Database and Storage section
     private fun deleteNoteInfo(v:View,currNoteID: String, fImgURL:String) {
 
         var db = FirebaseDatabase.getInstance()
@@ -220,6 +221,7 @@ class NoteAdapter(private val titles:ArrayList<String>,
 
     override fun getItemCount() = titles.size
 
+    //handling the widgets inside the itemView 'layout'
     class NoteViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
 
         var tvNoteContent:TextView = itemView.note_content
