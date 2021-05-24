@@ -1,11 +1,18 @@
 package com.example.landmarkfb
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Looper
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.GoogleMap.*
@@ -23,13 +30,16 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
     //Data class for storing API response results
     data class Place(val name:String = "", val latlng:LatLng = LatLng(0.0, 0.0))
 
+    var locationRequest:LocationRequest? = null
+    lateinit var locationCallback: LocationCallback
+    val locationRequestCode = 2
+
     lateinit var fusedLocationClient: FusedLocationProviderClient
-    var currentLocation : LatLng = LatLng(0.0,0.0)
+    lateinit var currentLocation : LatLng
     lateinit var mMap: GoogleMap
     lateinit var landmarkLocation: LatLng
     var landmarkName:String? = null
     var cameFromLandmark = false
-
     //Reference to all markers
     val markers = ArrayList<Marker>()
 
@@ -37,38 +47,35 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
 
-        //Set up location request to access current location later
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        //Check if coming from landmarkID page and retrieve the data from the intent
-
-        val lat:Double = intent.getDoubleExtra("latitude", 0.0)
-        val long:Double = intent.getDoubleExtra("longitude", 0.0)
-        landmarkName = intent.getStringExtra("landmark name")
-
-        //If came from Landmark page name set current location to landmark location
-
-        if (landmarkName != null)
+        //Check if google play services are installed before openning the map
+        val googleServicesAvailable = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
+        if (googleServicesAvailable != ConnectionResult.SUCCESS)
         {
-            cameFromLandmark = true
-            landmarkLocation = LatLng(lat,long)
-            currentLocation = landmarkLocation
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Google Play Services Required")
+            builder.setMessage("Google Play Services are required to use the map")
+
+            builder.setPositiveButton("Ok") { dialog, _ ->
+                dialog.dismiss()
+                finish()
+            }
+
+            builder.setOnDismissListener { finish() }
+
+            builder.create().show()
         }
 
-        getLocation()
-
-        //Map options
-        val options = GoogleMapOptions()
-        options.zoomControlsEnabled(true)
-
-        //Create map
-        val mapFragment = SupportMapFragment.newInstance(options)
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.mapContainer, mapFragment)
-            .commit()
-        mapFragment.getMapAsync(this)
+        else
+        {
+            //Request location access permissions
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), locationRequestCode)
+            }
+            else {
+                //Create and initialize map
+                startMapCreation()
+            }
+        }
 
     }
 
@@ -76,12 +83,9 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
     @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
 
-        getLocation()
-
         //Display the map on current location
         mMap = googleMap
         mMap.isMyLocationEnabled = true
-
         //Disable my location button if came from landmark page
         mMap.uiSettings.isMyLocationButtonEnabled = !cameFromLandmark
 
@@ -91,14 +95,14 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
         mMap.setOnMapClickListener(this)
 
         //Initialize camera on current location
-        val location = LatLng(currentLocation!!.latitude, currentLocation!!.longitude)
+
         mMap.moveCamera(CameraUpdateFactory.zoomTo(16f))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
 
         //Move to landmark (if coming from landmark ID)
         if (cameFromLandmark) {
-            mMap.addMarker(MarkerOptions().title(landmarkName).position(location).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)))
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16f))
+            mMap.addMarker(MarkerOptions().title(landmarkName).position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)))
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16f))
         }
     }
 
@@ -106,10 +110,10 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
     fun searchLocations(type:String = "", markerColor: Float)
     {
         //Get location and prepare the API request
-        getLocation()
+
         val result = ArrayList<Place>()
         val client = OkHttpClient()
-        val url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + currentLocation!!.latitude +", " + currentLocation!!.longitude + "&rankby=distance&type=" + type + "&key=AIzaSyAhUhs2q209k-NFFlS7yMF5I3Wk6WdIHmY"
+        val url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + currentLocation.latitude +", " + currentLocation.longitude + "&rankby=distance&type=" + type + "&key=AIzaSyAhUhs2q209k-NFFlS7yMF5I3Wk6WdIHmY"
 
         //Request JSON from Places API
         val request = Request.Builder().url(url).build()
@@ -168,13 +172,11 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
     fun onButtonClick(v:View)
     {
         //Initialize variables
-        getLocation()
-        val location = LatLng(currentLocation!!.latitude, currentLocation!!.longitude)
         var type = ""
         var markerColor = 0f
 
         //Move camera to current location and prevent button clicks until operation is finished
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(location))
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(currentLocation))
         clearMarkers()
         setClickable(false)
 
@@ -231,23 +233,90 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
     }
 
     @SuppressLint("MissingPermission")
-    fun getLocation()
+    fun startMapCreation()
     {
 
-        if (cameFromLandmark)
-        {
+        //Check if coming from landmarkID page and retrieve the data from the intent
+        val lat: Double = intent.getDoubleExtra("latitude", 0.0)
+        val long: Double = intent.getDoubleExtra("longitude", 0.0)
+        landmarkName = intent.getStringExtra("landmark name")
+
+        //If came from Landmark page name set current location to landmark location
+        if (landmarkName != null) {
+            cameFromLandmark = true
+            landmarkLocation = LatLng(lat, long)
             currentLocation = landmarkLocation
+            createMap()
         }
 
         else
         {
+            //Set up location request to keep updating current location
+            initializeLocationUpdates()
+
             //Get current location
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 currentLocation = LatLng(location!!.latitude, location!!.longitude)
+                createMap()
             }
         }
 
     }
+
+    fun createMap()
+    {
+        //Map options
+        val options = GoogleMapOptions()
+        options.zoomControlsEnabled(true)
+
+        //Create map after obtaining current location
+        val mapFragment = SupportMapFragment.newInstance(options)
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.mapContainer, mapFragment)
+            .commit()
+        mapFragment.getMapAsync(this)
+    }
+
+    /*************************
+    Location updates functions
+    *************************/
+
+    fun initializeLocationUpdates()
+    {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        createLocationRequest()
+        createLocationCallback()
+        startLocationUpdates()
+    }
+
+    @SuppressLint("MissingPermission")
+    fun startLocationUpdates() {
+        fusedLocationClient.requestLocationUpdates(locationRequest,
+            locationCallback,
+            Looper.getMainLooper())
+    }
+
+    fun createLocationRequest() {
+        locationRequest = LocationRequest.create()?.apply {
+            interval = 10000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+    }
+
+    fun createLocationCallback()
+    {
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+                for (location in locationResult.locations){
+                    currentLocation = LatLng(location.latitude, location.longitude)
+                }
+            }
+        }
+    }
+
+
 
     /****************************************
     Listener functions that handle map clicks
@@ -277,6 +346,20 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
         clearMarkers()
     }
 
+    /**************************
+    Handle location permission
+    **************************/
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == locationRequestCode && grantResults.contains(PackageManager.PERMISSION_GRANTED))
+        {
+            startMapCreation()
+        }
+        else
+        {
+            finish()
+        }
+    }
 }
 
 
