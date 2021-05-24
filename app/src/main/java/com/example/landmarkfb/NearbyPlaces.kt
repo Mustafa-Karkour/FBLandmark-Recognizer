@@ -31,15 +31,16 @@ class NearbyPlaces : AppCompatActivity(), OnMapReadyCallback,
     data class Place(val name:String = "", val latlng:LatLng = LatLng(0.0, 0.0))
 
     var locationRequest:LocationRequest? = null
-    lateinit var locationCallback: LocationCallback
     val locationRequestCode = 2
-
+    lateinit var locationCallback: LocationCallback
     lateinit var fusedLocationClient: FusedLocationProviderClient
     lateinit var currentLocation : LatLng
+
     lateinit var mMap: GoogleMap
     lateinit var landmarkLocation: LatLng
     var landmarkName:String? = null
     var cameFromLandmark = false
+
     //Reference to all markers
     val markers = ArrayList<Marker>()
 
