@@ -15,6 +15,8 @@ import kotlin.collections.Map
 class Journal : AppCompatActivity() {
 
     lateinit var db:FirebaseDatabase
+
+    //to refer to specific location in the database
     lateinit var myRef:DatabaseReference
     lateinit var mAuth:FirebaseAuth
 
@@ -34,7 +36,7 @@ class Journal : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
         var currUser = mAuth.currentUser
-        var currUserEmail = currUser.email
+        var currUserEmail = currUser.email //needed to specify the exact location from the database
         currUserEmail = currUserEmail.replace(".","-")
 
         db = FirebaseDatabase.getInstance()

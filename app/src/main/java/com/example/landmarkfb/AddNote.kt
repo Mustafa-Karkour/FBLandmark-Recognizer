@@ -133,7 +133,7 @@ class AddNote : AppCompatActivity() {
 
 
 
-
+        //specifying the image location in the Storage section
         var fileRef = fStorageRef.child(currUser.email.toString()).child(System.currentTimeMillis().toString())
 
 
@@ -152,7 +152,7 @@ class AddNote : AppCompatActivity() {
 
                 var noteID = myDBRef.push().key.toString() //random Key
 
-                var noteMode = NoteModel(
+                var noteModel = NoteModel(
                     title,
                     content,
                     uri.toString(),
@@ -160,7 +160,7 @@ class AddNote : AppCompatActivity() {
                     noteID
                 )
 
-                myDBRef.child(userEmail).child(noteID).setValue(noteMode).addOnSuccessListener { taskSnapshot ->
+                myDBRef.child(userEmail).child(noteID).setValue(noteModel).addOnSuccessListener { taskSnapshot ->
                     //Toast.makeText(applicationContext,"Uploaded Successfully",Toast.LENGTH_LONG).show()
                     onBackPressed() //go to the previous page
 
@@ -208,6 +208,7 @@ class AddNote : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        //check if an image 'data' is picked yet
         if(requestCode ==100 && resultCode == Activity.RESULT_OK && data != null){
 
             imgURL = data.data!!
