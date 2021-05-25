@@ -1,9 +1,8 @@
 package com.example.landmarkfb
 
-import android.Manifest
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -17,7 +16,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ActivityCompat
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
@@ -31,6 +29,7 @@ import java.io.ByteArrayOutputStream
 
 
 class LandmarkID : AppCompatActivity() {
+    val REQUEST_IMAGE_CAPTURE = 1
     lateinit var bitmapImg: Bitmap
     lateinit var functions: FirebaseFunctions
     lateinit var queue: RequestQueue
@@ -45,6 +44,16 @@ class LandmarkID : AppCompatActivity() {
         queue = Volley.newRequestQueue(this)
     }
 
+    fun openCamera(view: View) {
+
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        try {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        } catch (e: ActivityNotFoundException) {
+            // display error state to the user
+        }
+    }
+
     fun openGallery(v: View) {
         var intent: Intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
@@ -55,12 +64,35 @@ class LandmarkID : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode ==100 && resultCode == Activity.RESULT_OK && data != null) {
+        // Save image taken with the camera
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
+            // Save image as a bitmap and display it
+            bitmapImg = data?.extras?.get("data") as Bitmap
+            imgLocate.setImageBitmap(bitmapImg)
+
+            // Change constraints of Open Camera button
+//            val params = btnOpenCamera.layoutParams as ConstraintLayout.LayoutParams
+//            params.topToBottom = imgLocate.id
+//            btnOpenCamera.requestLayout()
+
+            // Remove on-screen text and replace with buttons
+            txtSelect.visibility = View.GONE
+            imgLocate.visibility = View.VISIBLE
+            btnLocate.visibility = View.VISIBLE
+        }
+
+        // Save image taken from the gallery
+        if(requestCode == 100 && resultCode == Activity.RESULT_OK && data != null) {
+            // Display the image
             imgLocate.setImageURI(data?.data)
-            // Change constraints of Gallery button
-            val params = btnGallery.layoutParams as ConstraintLayout.LayoutParams
-            params.topToBottom = imgLocate.id
-            btnGallery.requestLayout()
+//            // Change constraints of Gallery button
+//            val params = btnGallery.layoutParams as ConstraintLayout.LayoutParams
+//            params.topToBottom = imgLocate.id
+//            btnGallery.requestLayout()
+            // Change constraints of Open Camera button
+//            val params = btnOpenCamera.layoutParams as ConstraintLayout.LayoutParams
+//            params.topToBottom = imgLocate.id
+//            btnOpenCamera.requestLayout()
 
             // Remove on-screen text and replace with buttons
             txtSelect.visibility = View.GONE
@@ -71,12 +103,15 @@ class LandmarkID : AppCompatActivity() {
             imgUri = data?.data
             bitmapImg = MediaStore.Images.Media.getBitmap(this.contentResolver, imgUri)
         }
+
+
     }
 
     fun detectLandmark(v: View) {
         progressLocate.visibility = View.VISIBLE
 
         // Remove buttons after clicking
+        btnOpenCamera.visibility = View.GONE
         btnGallery.visibility = View.GONE
         btnLocate.visibility = View.GONE
 
@@ -109,6 +144,7 @@ class LandmarkID : AppCompatActivity() {
                     Log.d(TAG, "failed")
                     // Task failed with an exception
                     Toast.makeText(this, "Detection failed", Toast.LENGTH_SHORT).show()
+                    btnOpenCamera.visibility = View.VISIBLE
                     btnGallery.visibility = View.VISIBLE
                     btnLocate.visibility = View.VISIBLE
                     progressLocate.visibility = View.GONE
@@ -143,6 +179,7 @@ class LandmarkID : AppCompatActivity() {
             v.gravity = Gravity.CENTER
             toast.show()
 
+            btnOpenCamera.visibility = View.VISIBLE
             btnGallery.visibility = View.VISIBLE
             btnLocate.visibility = View.VISIBLE
             progressLocate.visibility = View.GONE
