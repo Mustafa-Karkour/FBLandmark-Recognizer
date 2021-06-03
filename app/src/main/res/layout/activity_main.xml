@@ -15,11 +15,11 @@
         android:drawableTop="@drawable/camera_icon"
         android:elevation="5dp"
         android:onClick="toLandmarkID"
-        android:paddingTop="10dp"
+        android:paddingTop="16dp"
         android:paddingBottom="0dp"
         android:text="Upload a picture"
         app:cornerRadius="12dp"
-        app:iconPadding="8dp"
+        app:iconPadding="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
