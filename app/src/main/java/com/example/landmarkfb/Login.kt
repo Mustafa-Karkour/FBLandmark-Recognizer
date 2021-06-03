@@ -98,7 +98,6 @@ class Login : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
-                    //val user = auth.currentUser
                     Toast.makeText(this@Login, "Login successful", Toast.LENGTH_SHORT).show()
                     reload()
                 } else {
