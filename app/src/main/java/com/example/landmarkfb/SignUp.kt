@@ -27,21 +27,19 @@ class SignUp : AppCompatActivity() {
         // Initialize Firebase Auth
         auth = Firebase.auth
 
-//        val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-//        val users: CollectionReference = db.collection("users")
-//        val user: MutableMap<String, Any> = HashMap()
-
+        // On clicking the sign up button, call the function to create an account
         btnSignUp.setOnClickListener {
             if (checkDataEntered()) {
-                val userEmail = email.getText().toString()
-                val userPassword = password.getText().toString()
-                //createAccount(userEmail, userPassword, users, user)
+                val userEmail = email.text.toString()
+                val userPassword = password.text.toString()
                 createAccount(userEmail, userPassword)
             } else {
-                progressSignUp.setVisibility(View.GONE)
-                btnSignUp.setVisibility(View.VISIBLE)
+                progressSignUp.visibility = View.GONE
+                btnSignUp.visibility = View.VISIBLE
             }
         }
+
+        // Go to the Login page
         txtLogin.setOnClickListener {
             val intent = Intent(applicationContext, Login::class.java)
             startActivity(intent)
@@ -51,33 +49,30 @@ class SignUp : AppCompatActivity() {
 
     public override fun onStart() {
         super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // Check if user is signed in (non-null)
         val currentUser = auth.currentUser
         if (currentUser != null) {
             reload()
         }
     }
 
-    private fun createAccount(
-        email: String,
-        password: String
-//        users: CollectionReference,
-//        user: MutableMap<*, *>
-    ) {
+    private fun createAccount(email: String, password: String) {
         // [START create_user_with_email]
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
+                    // Sign in success
                     Log.d(TAG, "createUserWithEmail:success")
-                    val fbUser = auth.currentUser
-//                    updateDB(users, user)
-                    updateUI(fbUser)
+
+                    // Go to main menu
+                    reload()
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
                     Toast.makeText(this@SignUp, "Authentication failed",
                         Toast.LENGTH_SHORT).show()
+
+                    // Remove progress bar and display sign up button
                     progressSignUp!!.visibility = View.GONE
                     btnSignUp!!.visibility = View.VISIBLE
                 }
@@ -92,93 +87,41 @@ class SignUp : AppCompatActivity() {
         finish()
     }
 
-//    private fun updateDB(users: CollectionReference, user: MutableMap<*, *>) {
-//        val fn = firstName!!.text.toString()
-//        val ln = lastName!!.text.toString()
-//        val userEmail = email!!.text.toString()
-//        user["First Name"] = fn
-//        user["Last Name"] = ln
-//        users.document(userEmail).set(user)
-//    }
-
-    private fun updateUI(user: FirebaseUser?) {
-        if (user != null) {
-//            // Set Display Name to the entered first name
-//            val setDisplayName = UserProfileChangeRequest.Builder().setDisplayName(
-//                firstName!!.text.toString()
-//            ).build()
-//            user.updateProfile(setDisplayName)
-
-            //Re-authentication to update Display Name
-            auth.signInWithEmailAndPassword(email!!.text.toString(), password!!.text.toString())
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Toast.makeText(this@SignUp, "Successful Authentication", Toast.LENGTH_SHORT)
-                            .show()
-                        Log.d(TAG, "signInWithEmail:success")
-
-                        //Go to main menu
-                        reload()
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.exception)
-                        Toast.makeText(this@SignUp, "Authentication failed.",
-                            Toast.LENGTH_SHORT).show()
-                    }
-                }
-        }
-    }
-
-    fun isEmail(text: EditText?): Boolean {
+    private fun isEmail(text: EditText?): Boolean {
+        // Check if email field is empty or has an invalid format
         val email: CharSequence = text!!.text.toString()
-        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        return email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    fun isEmpty(text: EditText?): Boolean {
-        val str: CharSequence = text!!.text.toString()
-        return TextUtils.isEmpty(str)
-    }
+    private fun checkDataEntered(): Boolean {
+        // Check if form is filled correctly and returns a boolean
 
-    fun checkDataEntered(): Boolean {
-        // Check if form is filled correctly
+        // Display a progress bar while checking the fields
         progressSignUp!!.visibility = View.VISIBLE
         btnSignUp!!.visibility = View.INVISIBLE
-//        if (isEmpty(firstName)) {
-//            Toast.makeText(this, "You must enter first name to register!", Toast.LENGTH_SHORT)
-//                .show()
-//            firstName!!.error = "First name is required!"
-//            return false
-//        }
-//        if (isEmpty(lastName)) {
-//            Toast.makeText(this, "Enter a last name to register", Toast.LENGTH_SHORT).show()
-//            lastName!!.error = "Last name is required!"
-//            return false
-//        }
+
+        // Check if email has a valid format
         if (!isEmail(email)) {
-            Toast.makeText(this, "Enter an e-mail address to register", Toast.LENGTH_SHORT).show()
             email!!.error = "Enter valid email!"
             return false
         }
-        if (isEmpty(password)) {
-            Toast.makeText(this, "Enter a password to register", Toast.LENGTH_SHORT).show()
+        // Check if password field is empty
+        if (password.text.toString().isEmpty()) {
             password!!.error = "Enter a password!"
             return false
         }
+        // Check if password meets the length requirement of 6 characters
         if (password!!.text.toString().length < 6) {
-            Toast.makeText(this, "Password must have at least 6 characters", Toast.LENGTH_SHORT)
-                .show()
             password!!.error = "Password must have at least 6 characters"
             return false
         }
-        if (isEmpty(confirmPassword)) {
-            Toast.makeText(this, "Type the password again to confirm", Toast.LENGTH_SHORT).show()
+        // Check if confirm password field is empty
+        if (confirmPassword.text.toString().isEmpty()) {
             confirmPassword!!.error = "Confirm password"
             return false
         }
+        // Check if both the password fields match
         if (!password!!.text.toString().equals(confirmPassword!!.text.toString())) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT)
-                .show()
             confirmPassword!!.error = "Passwords do not match"
             return false
         }

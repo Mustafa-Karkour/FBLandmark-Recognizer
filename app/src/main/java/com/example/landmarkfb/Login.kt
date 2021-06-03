@@ -15,11 +15,6 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_email_log_in.*
 
 class Login : AppCompatActivity() {
-    //    var email: EditText? = null
-//    var password: EditText? = null
-//    var btnLogin: MaterialButton? = null
-//    var txtSignUp: TextView? = null
-//    var progressBar: ProgressBar? = null
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,36 +41,33 @@ class Login : AppCompatActivity() {
         }
     }
 
-    fun isEmail(text: EditText?): Boolean {
+    private fun isEmail(text: EditText?): Boolean {
+        // Check if email field is empty or has an invalid format
         val email: CharSequence = text!!.text.toString()
-        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        return email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    fun isEmpty(text: EditText?): Boolean {
-        val str: CharSequence = text!!.text.toString()
-        return TextUtils.isEmpty(str)
-    }
-
-    fun checkDataEntered(): Boolean {
+    private fun checkDataEntered(): Boolean {
+        // Show progress bar while processing the input
         progress.visibility = View.VISIBLE
         btnLogin.visibility = View.INVISIBLE
+
+        // Check if email field is empty or has an invalid format
         if (!isEmail(email)) {
-            Toast.makeText(this, "Enter an e-mail address to register", Toast.LENGTH_SHORT).show()
-            email!!.error = "Enter valid email!"
+            email!!.error = "Enter a valid email!"
             return false
         }
-        if (isEmpty(password)) {
-            Toast.makeText(this, "Enter a password to register", Toast.LENGTH_SHORT).show()
+        // Check if password field is empty
+        if (password.text.toString().isEmpty()) {
             password!!.error = "Enter a password!"
             return false
         }
         return true
     }
 
-
     public override fun onStart() {
         super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // Check if user is signed in (non-null)
         val currentUser = auth.currentUser
         if (currentUser != null) {
             reload()
@@ -88,8 +80,6 @@ class Login : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-
-
 
     private fun signIn(email: String, password: String) {
         // [START sign_in_with_email]
@@ -105,6 +95,8 @@ class Login : AppCompatActivity() {
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
                     Toast.makeText(this@Login, "Authentication failed.",
                         Toast.LENGTH_SHORT).show()
+
+                    // Remove progress bar and show login button
                     progress.visibility = View.GONE
                     btnLogin.visibility = View.VISIBLE
                 }
