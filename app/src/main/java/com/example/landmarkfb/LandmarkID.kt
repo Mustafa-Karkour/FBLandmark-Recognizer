@@ -70,11 +70,6 @@ class LandmarkID : AppCompatActivity() {
             bitmapImg = data?.extras?.get("data") as Bitmap
             imgLocate.setImageBitmap(bitmapImg)
 
-            // Change constraints of Open Camera button
-//            val params = btnOpenCamera.layoutParams as ConstraintLayout.LayoutParams
-//            params.topToBottom = imgLocate.id
-//            btnOpenCamera.requestLayout()
-
             // Remove on-screen text and replace with buttons
             txtSelect.visibility = View.GONE
             imgLocate.visibility = View.VISIBLE
@@ -85,14 +80,6 @@ class LandmarkID : AppCompatActivity() {
         if(requestCode == 100 && resultCode == Activity.RESULT_OK && data != null) {
             // Display the image
             imgLocate.setImageURI(data?.data)
-//            // Change constraints of Gallery button
-//            val params = btnGallery.layoutParams as ConstraintLayout.LayoutParams
-//            params.topToBottom = imgLocate.id
-//            btnGallery.requestLayout()
-            // Change constraints of Open Camera button
-//            val params = btnOpenCamera.layoutParams as ConstraintLayout.LayoutParams
-//            params.topToBottom = imgLocate.id
-//            btnOpenCamera.requestLayout()
 
             // Remove on-screen text and replace with buttons
             txtSelect.visibility = View.GONE
@@ -179,11 +166,13 @@ class LandmarkID : AppCompatActivity() {
             v.gravity = Gravity.CENTER
             toast.show()
 
+            // Show buttons if detection failed
             btnOpenCamera.visibility = View.VISIBLE
             btnGallery.visibility = View.VISIBLE
             btnLocate.visibility = View.VISIBLE
             progressLocate.visibility = View.GONE
         } else {
+            // Parse the result of the request
             for (label in resultArray) {
                 val labelObj = label.asJsonObject
                 val landmarkName = labelObj["description"]
@@ -262,16 +251,15 @@ class LandmarkID : AppCompatActivity() {
     }
 
     fun showInJournal(v: View) {
+        // Create an intent that goes to the journal with the image and landmark name
         intent = Intent(this, AddNote::class.java)
         intent.putExtra("Image uri", imgUri)
         intent.putExtra("landmark name", tvTitle.text)
-        // To get it back, use Uri imgUri = intent.getParcelableExtra("Image uri")
-        // You can also send it as a string, then convert it back
         startActivity(intent)
     }
 
     fun showOnMap(v: View) {
-
+        // Create an intent that goes to the map with the landmark name and location coordinates
         intent = Intent(this, NearbyPlaces::class.java)
         intent.putExtra("landmark name", tvTitle.text)
         intent.putExtra("latitude", latitude)
