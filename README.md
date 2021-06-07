@@ -1,9 +1,12 @@
-# FBLandmark-Recognizer
-
-<h1>A Simple Android App that Recognizes Tourist Places</h1>
-
-<h2>Images
-  
-![LM1](https://user-images.githubusercontent.com/78483535/112638292-27220180-8e50-11eb-98af-39762e44f3e1.PNG)
-![LM2](https://user-images.githubusercontent.com/78483535/112638304-29845b80-8e50-11eb-941d-3f83fc4c70a1.PNG)
-</h2>
+<h1>TravelMate</h1>
+<h4>
+  Team members:<br>
+  David Liang (S00049751)<br>
+  Mustafa Karkour (S00049859)<br>
+  Ahmad Aldulaie (S00052749)<br>
+</h4>
+<p>
+  TravelMate is a travel companion mobile application that can help tourists learn about the places they visit while recording their vacation memories.
+  <br>
+  With the Google Cloud Vision AI, the app can recognize photos of popular landmarks uploaded from the user's phone and display information about the landmark from Wikipedia.    After the identification, users can add the photo along with a note to a journal or view the landmark on a map. The journal entries are stored onto Firebase Realtime Database with a separate journal for each user. The map uses Google Places to show tourist spots like landmarks or tourist spots near either the landmark or the user's location.
+<p>
