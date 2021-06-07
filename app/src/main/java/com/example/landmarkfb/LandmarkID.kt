@@ -15,7 +15,6 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
@@ -51,6 +50,7 @@ class LandmarkID : AppCompatActivity() {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
         } catch (e: ActivityNotFoundException) {
             // display error state to the user
+            Log.d(TAG, e.message)
         }
     }
 
@@ -129,8 +129,10 @@ class LandmarkID : AppCompatActivity() {
             .addOnCompleteListener { task ->
                 if (!task.isSuccessful) {
                     Log.d(TAG, "failed")
-                    // Task failed with an exception
+                    // Image annotation failed
                     Toast.makeText(this, "Detection failed", Toast.LENGTH_SHORT).show()
+
+                    // Show the buttons on screen again
                     btnOpenCamera.visibility = View.VISIBLE
                     btnGallery.visibility = View.VISIBLE
                     btnLocate.visibility = View.VISIBLE
@@ -138,20 +140,22 @@ class LandmarkID : AppCompatActivity() {
                 } else {
                     Log.d(TAG, "success")
                     // Task completed successfully
+                    // Set the text view to scrollable
                     tvResult.movementMethod = ScrollingMovementMethod()
+                    // Send the result to be analyzed
                     parseResult(task)
                 }
             }
     }
 
     private fun annotateImage(requestJson: String): Task<JsonElement> {
+        // Calls a firebase function with our request json and returns the result
         return functions
             .getHttpsCallable("annotateImage")
             .call(requestJson)
             .continueWith { task ->
-                // This continuation runs on either success or failure, but if the task
-                // has failed then result will throw an Exception which will be
-                // propagated down.
+                // Returns an object of type Task<JsonElement>
+                // If the request is successful, convert the result to Json, then a parseable JsonElement
                 val result = task.result?.data
                 JsonParser.parseString(Gson().toJson(result))
             }
@@ -159,9 +163,13 @@ class LandmarkID : AppCompatActivity() {
 
     private fun parseResult(task: Task<JsonElement>) {
         Log.d(TAG, task.result!!.toString())
+        // Get the required section of the response as a JsonArray
         val resultArray = task.result!!.asJsonArray[0].asJsonObject["landmarkAnnotations"].asJsonArray
+
+        // If the array is empty, display an error message and reset the positions of the buttons
         if (resultArray.size() == 0) {
             val toast = Toast.makeText(this, "Detection failed\nPlease try again or use a different image", Toast.LENGTH_SHORT)
+            // This code is to center the text in the toast message
             val v = toast.view.findViewById<TextView>(android.R.id.message)
             v.gravity = Gravity.CENTER
             toast.show()
@@ -175,29 +183,32 @@ class LandmarkID : AppCompatActivity() {
             // Parse the result of the request
             for (label in resultArray) {
                 val labelObj = label.asJsonObject
+                // Get the name of the landmark
                 val landmarkName = labelObj["description"]
+                // Store the latitude and longitude of the landmark for the map
                 val latLng = labelObj["locations"].asJsonArray[0].asJsonObject["latLng"]
                 latitude = latLng.asJsonObject["latitude"].toString().toDoubleOrNull()
                 longitude = latLng.asJsonObject["longitude"].toString().toDoubleOrNull()
+                // Use the identified landmark name to get its Wikipedia entry
                 findPageID(landmarkName.toString())
             }
         }
     }
 
     private fun findPageID(landmarkName: String) {
-        // Initialize Request Queue
+        // Build the request url to find the page ID using the landmark name
         var url = "https://en.wikipedia.org/w/api.php?format=json&action=query&list=search"
         val resultLimit = 1
         url += "&srlimit=$resultLimit&srsearch=$landmarkName"
 
-        // Request a string response from the provided URL.
+        // Request a string response from the provided URL using Volley
         val jsonObjectRequest = JsonObjectRequest(
             Request.Method.GET, url, null,
             { response ->
+                // Parse the result for the page ID of the landmark page
                 val jsonObject: JSONObject = response.getJSONObject("query")
                 val searchArray = jsonObject.getJSONArray("search")
                 for (i in 0 until searchArray.length()) {
-                    val landmarkTitle = searchArray.getJSONObject(i).getString("title")
                     val pageID = searchArray.getJSONObject(i).getInt("pageid")
                     displayExtract(pageID)
                 }
@@ -214,10 +225,11 @@ class LandmarkID : AppCompatActivity() {
     }
 
     private fun displayExtract(pageID: Int) {
+        // Build the request url to find the Wikipedia entry using the page ID
         var url = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1"
         url += "&pageids=$pageID"
 
-        // Request a string response from the provided URL.
+        // Request a string response from the provided URL using Volley
         val jsonObjectRequest = JsonObjectRequest(
             Request.Method.GET, url, null,
             { response ->
@@ -225,12 +237,16 @@ class LandmarkID : AppCompatActivity() {
                     response.getJSONObject("query").getJSONObject("pages").getJSONObject(
                         pageID.toString()
                     )
+
+                // Show the title and extract on the screen
                 var title = jsonObject.getString("title")
                 val extract = jsonObject.getString("extract")
                 progressLocate.visibility = View.GONE
                 tvTitle.text = title
                 tvResult.text = extract
                 tvResult.visibility = View.VISIBLE
+
+                // Show the buttons to go to the journal and map
                 btnShowInJournal.visibility = View.VISIBLE
                 btnShowOnMap.visibility = View.VISIBLE
             },
@@ -266,6 +282,5 @@ class LandmarkID : AppCompatActivity() {
         intent.putExtra("longitude", longitude)
 
         startActivity(intent)
-
     }
 }

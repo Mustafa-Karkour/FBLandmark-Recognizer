@@ -24,6 +24,11 @@ class Login : AppCompatActivity() {
         auth = Firebase.auth
 
         btnLogin.setOnClickListener {
+            // Show progress bar while processing the input
+            progress.visibility = View.VISIBLE
+            btnLogin.visibility = View.INVISIBLE
+
+            // Check that the data is in the correct format then pass it to Firebase Authentication
             if (checkDataEntered()) {
                 val userEmail = email.getText().toString()
                 val userPassword = password.getText().toString()
@@ -33,6 +38,8 @@ class Login : AppCompatActivity() {
                 btnLogin.setVisibility(View.VISIBLE)
             }
         }
+
+        // Clicking the text at the bottom will go to the sign up page
         txtSignUp.setOnClickListener {
             val intent = Intent(applicationContext, SignUp::class.java)
             startActivity(intent)
@@ -47,10 +54,6 @@ class Login : AppCompatActivity() {
     }
 
     private fun checkDataEntered(): Boolean {
-        // Show progress bar while processing the input
-        progress.visibility = View.VISIBLE
-        btnLogin.visibility = View.INVISIBLE
-
         // Check if email field is empty or has an invalid format
         if (!isEmail(email)) {
             email!!.error = "Enter a valid email!"
@@ -92,8 +95,10 @@ class Login : AppCompatActivity() {
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    Toast.makeText(this@Login, "Authentication failed.",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@Login, "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                     // Remove progress bar and show login button
                     progress.visibility = View.GONE

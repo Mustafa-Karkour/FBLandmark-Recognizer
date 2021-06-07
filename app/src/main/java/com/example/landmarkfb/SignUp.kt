@@ -24,8 +24,12 @@ class SignUp : AppCompatActivity() {
         // Initialize Firebase Auth
         auth = Firebase.auth
 
-        // On clicking the sign up button, call the function to create an account
         btnSignUp.setOnClickListener {
+            // Display a progress bar while checking the fields
+            progressSignUp!!.visibility = View.VISIBLE
+            btnSignUp!!.visibility = View.INVISIBLE
+
+            // Check that the data is in the correct format then pass it to Firebase Authentication
             if (checkDataEntered()) {
                 val userEmail = email.text.toString()
                 val userPassword = password.text.toString()
@@ -36,7 +40,7 @@ class SignUp : AppCompatActivity() {
             }
         }
 
-        // Go to the Login page
+        // Clicking the text at the bottom will go to the Login page
         txtLogin.setOnClickListener {
             val intent = Intent(applicationContext, Login::class.java)
             startActivity(intent)
@@ -92,10 +96,6 @@ class SignUp : AppCompatActivity() {
 
     private fun checkDataEntered(): Boolean {
         // Check if form is filled correctly and returns a boolean
-
-        // Display a progress bar while checking the fields
-        progressSignUp!!.visibility = View.VISIBLE
-        btnSignUp!!.visibility = View.INVISIBLE
 
         // Check if email has a valid format
         if (!isEmail(email)) {
