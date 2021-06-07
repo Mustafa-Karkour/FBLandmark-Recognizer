@@ -1,12 +1,21 @@
 package com.example.landmarkfb
 
-import android.Manifest
+/*
+CSIS-401 Project
+Spring 2021
+
+TravelMate
+
+Team members:
+David Liang (S00049751) - Landmark Identification and Login
+Mustafa Karkour (S00049859) - Journal
+Ahmad Aldulaie (S00052749) - Map
+*/
+
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
@@ -24,7 +33,6 @@ class MainActivity : AppCompatActivity() {
     fun toJournal(view: View) {
         val intent = Intent(applicationContext, Journal::class.java)
         startActivity(intent)
-        //finish()
     }
 
     fun toNearby(view: View) {
@@ -34,7 +42,6 @@ class MainActivity : AppCompatActivity() {
 
     fun signOut(v: View) {
         FirebaseAuth.getInstance().signOut()
-        //val intent = Intent(applicationContext, Email_Login::class.java)
         val intent = Intent(applicationContext, Login::class.java)
         startActivity(intent)
         finish()
