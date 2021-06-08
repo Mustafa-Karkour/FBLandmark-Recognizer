@@ -41,6 +41,8 @@ class LandmarkID : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landmark_id)
+
+        // Start the RequestQueue
         queue = Volley.newRequestQueue(this)
     }
 
@@ -71,7 +73,7 @@ class LandmarkID : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         // Check if there is a result from the camera
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK && data != null) {
             // Save image as a bitmap and display it
             bitmapImg = data?.extras?.get("data") as Bitmap
             imgLocate.setImageBitmap(bitmapImg)
@@ -96,8 +98,6 @@ class LandmarkID : AppCompatActivity() {
             imgUri = data?.data
             bitmapImg = MediaStore.Images.Media.getBitmap(this.contentResolver, imgUri)
         }
-
-
     }
 
     fun detectLandmark(v: View) {
