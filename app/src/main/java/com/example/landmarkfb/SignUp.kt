@@ -64,6 +64,8 @@ class SignUp : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success
                     Log.d(TAG, "createUserWithEmail:success")
+                    Toast.makeText(this@SignUp, "Account creation successful",
+                        Toast.LENGTH_SHORT).show()
 
                     // Go to main menu
                     reload()

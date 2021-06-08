@@ -124,8 +124,9 @@ class LandmarkID : AppCompatActivity() {
         val image = JsonObject()
         image.add("content", JsonPrimitive(base64encoded))
         request.add("image", image)
-        //Add features to the request
+        // Add features to the request
         val feature = JsonObject()
+        // Limit number of results
         feature.add("maxResults", JsonPrimitive(1))
         feature.add("type", JsonPrimitive("LANDMARK_DETECTION"))
         val features = JsonArray()
@@ -271,7 +272,7 @@ class LandmarkID : AppCompatActivity() {
 
     protected override fun onStop() {
         super.onStop()
-        // Cal all requests in the RequestQueue
+        // Cancel all requests in the RequestQueue
         queue.cancelAll(TAG)
     }
 
