@@ -28,7 +28,8 @@ import java.io.ByteArrayOutputStream
 
 
 class LandmarkID : AppCompatActivity() {
-    val REQUEST_IMAGE_CAPTURE = 1
+    private val REQUEST_IMAGE_CAPTURE = 1
+    private val PICK_IMAGE = 2
     lateinit var bitmapImg: Bitmap
     lateinit var functions: FirebaseFunctions
     lateinit var queue: RequestQueue
@@ -44,7 +45,7 @@ class LandmarkID : AppCompatActivity() {
     }
 
     fun openCamera(view: View) {
-
+        // Implicit intent to open the camera and get a picture
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
@@ -55,16 +56,21 @@ class LandmarkID : AppCompatActivity() {
     }
 
     fun openGallery(v: View) {
-        var intent: Intent = Intent(Intent.ACTION_GET_CONTENT)
+        // Implicit intent to show only the images in the phone
+        var intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
-
-        startActivityForResult(intent, 100)
+        try {
+            startActivityForResult(intent, PICK_IMAGE)
+        } catch (e: ActivityNotFoundException) {
+            // display error state to the user
+            Log.d(TAG, e.message)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // Save image taken with the camera
+        // Check if there is a result from the camera
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
             // Save image as a bitmap and display it
             bitmapImg = data?.extras?.get("data") as Bitmap
@@ -76,8 +82,8 @@ class LandmarkID : AppCompatActivity() {
             btnLocate.visibility = View.VISIBLE
         }
 
-        // Save image taken from the gallery
-        if(requestCode == 100 && resultCode == Activity.RESULT_OK && data != null) {
+        // Check if there is a result from the gallery
+        if(requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             // Display the image
             imgLocate.setImageURI(data?.data)
 
@@ -95,9 +101,10 @@ class LandmarkID : AppCompatActivity() {
     }
 
     fun detectLandmark(v: View) {
+        // Show progress bar
         progressLocate.visibility = View.VISIBLE
 
-        // Remove buttons after clicking
+        // Remove buttons after pressing
         btnOpenCamera.visibility = View.GONE
         btnGallery.visibility = View.GONE
         btnLocate.visibility = View.GONE
@@ -105,7 +112,7 @@ class LandmarkID : AppCompatActivity() {
         // Initialize instance of Cloud Functions
         functions = FirebaseFunctions.getInstance()
 
-        // Convert image to base64 encoded string
+        // Convert image from bitmap to base64 encoded string
         val byteArrayOutputStream = ByteArrayOutputStream()
         bitmapImg.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
         val imageBytes: ByteArray = byteArrayOutputStream.toByteArray()
@@ -125,6 +132,7 @@ class LandmarkID : AppCompatActivity() {
         features.add(feature)
         request.add("features", features)
 
+        // Call the firebase function with our json request with a listener for when it ends
         annotateImage(request.toString())
             .addOnCompleteListener { task ->
                 if (!task.isSuccessful) {
@@ -263,6 +271,7 @@ class LandmarkID : AppCompatActivity() {
 
     protected override fun onStop() {
         super.onStop()
+        // Cal all requests in the RequestQueue
         queue.cancelAll(TAG)
     }
 
@@ -280,7 +289,6 @@ class LandmarkID : AppCompatActivity() {
         intent.putExtra("landmark name", tvTitle.text)
         intent.putExtra("latitude", latitude)
         intent.putExtra("longitude", longitude)
-
         startActivity(intent)
     }
 }
